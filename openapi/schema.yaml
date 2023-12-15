@@ -1,0 +1,353 @@
+openapi: 3.0.3
+info:
+  title: API
+  description: API
+  version: 1.0.0
+
+paths:
+  /news:
+    get:
+      summary: Get all news
+      operationId: getAllNews
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+    post:
+      summary: Add a new news item
+      operationId: addNews
+      requestBody:
+        description: News object to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/News'
+      responses:
+        '201':
+          description: News item added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/News'
+        '400':
+          description: Invalid request body
+  /news/{id}:
+    get:
+      summary: Get news by ID
+      operationId: getNewsById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the news to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/News'
+        '404':
+          description: News not found
+    put:
+      summary: Update news by ID
+      operationId: updateNewsById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the news to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated news object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/News'
+      responses:
+        '200':
+          description: News item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/News'
+        '400':
+          description: Invalid request body or ID
+        '404':
+          description: News not found
+    delete:
+      summary: Delete news by ID
+      operationId: deleteNewsById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the news to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: News item deleted successfully
+        '404':
+          description: News not found
+  /user:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Add a new user
+      operationId: addUser
+      requestBody:
+        description: User object to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid request body
+  /user/{id}:
+    get:
+      summary: Get user by ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      summary: Update user by ID
+      operationId: updateUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid request body or ID
+        '404':
+          description: User not found
+    delete:
+      summary: Delete user by ID
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+            
+  /user/login:
+    post:
+      summary: User login
+      operationId: loginUser
+      requestBody:
+        description: User login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /user/signup:
+    post:
+      summary: User signup
+      operationId: signupUser
+      requestBody:
+        description: User signup information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                  minLength: 6
+      responses:
+        '200':
+          description: User signed up successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  access_token:
+                    type: string
+        '400':
+          description: Invalid request body
+components:
+  schemas:
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        url:
+          type: string
+        date_public:
+          type: string
+          format: date
+        image:
+          type: string
+        imgdescr:
+          type: string
+        annotation:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        updated_by:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        password_hash:
+          type: string
+        auth_key:
+          type: string
+        unconfirmed_email:
+          type: string
+        registration_ip:
+          type: string
+        flags:
+          type: integer
+        confirmed_at:
+          type: integer
+        blocked_at:
+          type: integer
+        updated_at:
+          type: integer
+        created_at:
+          type: integer
+        last_login_at:
+          type: integer
+        last_login_ip:
+          type: string
+        auth_tf_key:
+          type: string
+        auth_tf_enabled:
+          type: boolean
+        auth_tf_type:
+          type: string
+        auth_tf_mobile_phone:
+          type: string
+        password_changed_at:
+          type: integer
+        gdpr_consent:
+          type: boolean
+        gdpr_consent_date:
+          type: integer
+        gdpr_deleted:
+          type: boolean
+        access_token:
+          type: string
+

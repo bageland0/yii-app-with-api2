@@ -1,0 +1,62 @@
+# Development stack overrides
+#
+# Variables are populated with values from `.env`
+#
+version: '2'
+services:
+  api-php:
+    build: api
+    volumes:
+      # Mount source-code for development
+      - ./:/app
+    depends_on:
+      - db
+      - redis
+      - mailcatcher
+
+  backend-php:
+    build: backend
+    volumes:
+      # Re-use local composer cache via host-volume
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      # Mount source-code for development
+      - ./:/app
+    depends_on:
+      - db
+      - redis
+      - mailcatcher
+
+  frontend-php:
+    build: frontend
+    volumes:
+      # Re-use local composer cache via host-volume
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      # Mount source-code for development
+      - ./:/app
+    depends_on:
+      - db
+      - redis
+      - mailcatcher
+
+  db:
+    image: mariadb:10.8
+    environment:
+      - MARIADB_ROOT_PASSWORD=verysecret
+      - MARIADB_DATABASE=api_db
+      - MARIADB_USER=api
+      - MARIADB_PASSWORD=apisecret
+
+  db-test:
+    image: mariadb:10.8
+    environment:
+      - MARIADB_ROOT_PASSWORD=verysecret
+      - MARIADB_DATABASE=api_db_test
+      - MARIADB_USER=api_test
+      - MARIADB_PASSWORD=apisecret
+
+  redis:
+    image: redis:3
+
+  mailcatcher:
+    image: nisenabe/mailcatcher
+
